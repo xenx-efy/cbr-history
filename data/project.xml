@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<rss xmlns:ns0="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Проекты нормативных актов Банка России | Банк России</title>
+    <description>Проекты нормативных актов Банка России</description>
+    <copyright>Банк России</copyright>
+    <ns0:link href="https://www.cbr.ru/rss/project" rel="self" type="application/rss+xml" />
+    <link>https://www.cbr.ru/project_na/</link>
+    <language>ru-RU</language>
+    <lastBuildDate>Fri, 17 Jul 2026 18:05:50 +0300</lastBuildDate>
+    <ttl>5</ttl>
+    <item>
+      <title>Проект указания Банка России «О страховых тарифах по обязательному страхованию гражданской ответственности владельца опасного объекта за причинение вреда в результате аварии на опасном объекте»</title>
+      <link>https://www.cbr.ru/project_na/?tab.current=t2#a_6780</link>
+      <guid isPermaLink="false">msg_6780</guid>
+      <description />
+      <pubDate>Fri, 17 Jul 2026 18:05:50 +0300</pubDate>
+      <category>Департамент страхового рынка (по 30.07.2026)</category>
+    </item>
+    <item>
+      <title>Проект указания Банка России «О внесении изменений в Указание Банка России от 6 декабря 2019 года № 5345-У «О порядке открытия и ведения специального счета в Банке России, порядке зачисления денежных средств на специальный счет в Банке России и порядке возврата денежных средств со специального счета в Банке России»</title>
+      <link>https://www.cbr.ru/project_na/?tab.current=t2#a_6779</link>
+      <guid isPermaLink="false">msg_6779</guid>
+      <description />
+      <pubDate>Mon, 13 Jul 2026 10:13:46 +0300</pubDate>
+      <category>Департамент национальной платежной системы (по 27.07.2026)</category>
+    </item>
+    <item>
+      <title>Проект положения Банка России «О формах раскрытия информации в бухгалтерской (финансовой) отчетности отдельных некредитных финансовых организаций и порядке группировки счетов бухгалтерского учета в соответствии с показателями бухгалтерской (финансовой) отчетности»</title>
+      <link>https://www.cbr.ru/project_na/?tab.current=t2#a_6778</link>
+      <guid isPermaLink="false">msg_6778</guid>
+      <description />
+      <pubDate>Thu, 09 Jul 2026 14:22:39 +0300</pubDate>
+      <category>Департамент регулирования бухгалтерского учета (по 23.07.2026)</category>
+    </item>
+    <item>
+      <title>Сводная таблица замечаний и предложений по проекту положения Банка России «О порядке расчета величины концентрации иммобилизованных активов, включаемой в расчет собственных средств (капитала) кредитных организаций (банковских групп)»</title>
+      <link>https://www.cbr.ru/project_na/?tab.current=t2#a_6777</link>
+      <guid isPermaLink="false">msg_6777</guid>
+      <description />
+      <pubDate>Thu, 09 Jul 2026 09:31:37 +0300</pubDate>
+      <category>Департамент банковского регулирования и аналитики (по 24.07.2026)</category>
+    </item>
+    <item>
+      <title>Проект указания Банка России «О внесении изменений в Указание Банка России от 22 июля 2014 года № 3338-У «О порядке проведения территориальными учреждениями Банка России проверок соблюдения кредитными организациями требований к счетно-сортировальным машинам, применяемым при обработке банкнот Банка России, предназначенных для выдачи клиентам»</title>
+      <link>https://www.cbr.ru/project_na/?tab.current=t2#a_6776</link>
+      <guid isPermaLink="false">msg_6776</guid>
+      <description />
+      <pubDate>Wed, 08 Jul 2026 13:43:34 +0300</pubDate>
+      <category>Департамент наличного денежного обращения (по 21.07.2026)</category>
+    </item>
+  </channel>
+</rss>
