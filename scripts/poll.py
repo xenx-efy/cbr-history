@@ -1,3 +1,12 @@
+"""
+Сбор и накопление истории RSS-лент Банка России.
+
+Опрашивает три ленты (RssNews, navr, project), сливает новые записи
+в локальные накопительные XML-файлы с дедупликацией по guid.
+Файлы можно скармливать напрямую алгоритму определения релевантных
+публикаций — формат совпадает с оригинальным RSS Банка России.
+"""
+
 import httpx
 import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
@@ -13,13 +22,35 @@ FEEDS = {
 
 DATA_DIR = pathlib.Path("data")
 
+# Некоторые серверы блокируют дефолтный User-Agent httpx.
+HEADERS = {"User-Agent": "CBR-Poller/1.0 (+internal pilot data collector)"}
+
+
 def load_existing(path: pathlib.Path):
-    """Возвращает (root, channel, {guid: item_element}) или (None, None, {}) если файла нет"""
+    """
+    Возвращает (root, channel, {guid: item_element}) для уже
+    накопленного файла, либо (None, None, {}), если файла нет
+    ИЛИ он пуст/повреждён (невалидный XML).
+
+    Повреждённый/пустой файл трактуется как "файла нет" — при
+    следующем запуске скрипт просто пересоздаст его с нуля из
+    свежего ответа ЦБ, вместо того чтобы падать бесконечно.
+    """
     if not path.exists():
         return None, None, {}
-    tree = ET.parse(path)
+
+    try:
+        tree = ET.parse(path)
+    except ET.ParseError:
+        print(f"  [!] {path}: файл повреждён или пуст, будет пересоздан")
+        return None, None, {}
+
     root = tree.getroot()
     channel = root.find("channel")
+    if channel is None:
+        print(f"  [!] {path}: нет тега <channel>, файл будет пересоздан")
+        return None, None, {}
+
     items = {}
     for item in channel.findall("item"):
         guid_el = item.find("guid")
@@ -27,16 +58,22 @@ def load_existing(path: pathlib.Path):
             items[guid_el.text] = item
     return root, channel, items
 
+
 def pub_date_key(item):
     date_el = item.find("pubDate")
-    try:
-        return parsedate_to_datetime(date_el.text)
-    except Exception:
-        return parsedate_to_datetime("Thu, 01 Jan 1970 00:00:00 +0000")
+    if date_el is not None and date_el.text:
+        try:
+            return parsedate_to_datetime(date_el.text)
+        except (TypeError, ValueError, IndexError):
+            pass
+    # записи без валидной даты уходят в конец списка
+    return parsedate_to_datetime("Thu, 01 Jan 1970 00:00:00 +0000")
+
 
 def merge_feed(name: str, url: str):
     path = DATA_DIR / f"{name}.xml"
-    resp = httpx.get(url, timeout=15)
+
+    resp = httpx.get(url, timeout=15, headers=HEADERS)
     resp.raise_for_status()
 
     fresh_root = ET.fromstring(resp.content)
@@ -47,7 +84,8 @@ def merge_feed(name: str, url: str):
 
     new_count = 0
     if existing_root is None:
-        # первый запуск — используем свежий ответ как базу
+        # первый запуск (или файл был битым/пустым) — берём свежий
+        # ответ как базу
         existing_root = fresh_root
         existing_channel = fresh_channel
         existing_by_guid = {
@@ -74,14 +112,25 @@ def merge_feed(name: str, url: str):
     for it in all_items:
         existing_channel.append(it)
 
-    # атомарная запись
+    # атомарная запись: сначала во временный файл, потом
+    # os.replace поверх старого — чтобы обрыв процесса на
+    # середине записи не оставил файл в битом состоянии
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     fd, tmp_path = tempfile.mkstemp(dir=DATA_DIR, suffix=".xml")
     os.close(fd)
-    ET.ElementTree(existing_root).write(tmp_path, encoding="utf-8", xml_declaration=True)
-    os.replace(tmp_path, path)
+    try:
+        ET.ElementTree(existing_root).write(
+            tmp_path, encoding="utf-8", xml_declaration=True
+        )
+        os.replace(tmp_path, path)
+    except Exception:
+        # подчищаем временный файл, если запись не удалась
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+        raise
 
     return new_count, len(all_items)
+
 
 def poll_all():
     for name, url in FEEDS.items():
@@ -90,6 +139,7 @@ def poll_all():
             print(f"{name}: +{new_count} новых, всего {total}")
         except Exception as e:
             print(f"{name}: ошибка опроса — {e}")
+
 
 if __name__ == "__main__":
     poll_all()
