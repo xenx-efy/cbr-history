@@ -2,7 +2,7 @@ name: Poll CBR RSS feeds
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '17 6 * * *'
   workflow_dispatch: {}   # чтобы можно было запустить вручную из интерфейса GitHub
 
 permissions:
