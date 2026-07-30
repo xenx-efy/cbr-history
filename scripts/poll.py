@@ -15,9 +15,10 @@ import os
 import tempfile
 
 FEEDS = {
-    "rssnews": "https://cbr.ru/rss/RssNews",
-    "navr":    "https://cbr.ru/rss/navr",
-    "project": "https://cbr.ru/rss/project",
+    "rssnews":   "https://cbr.ru/rss/RssNews",
+    "navr":      "https://cbr.ru/rss/navr",
+    "project":   "https://cbr.ru/rss/project",
+    "rsspress":  "https://cbr.ru/rss/RssPress",
 }
 
 DATA_DIR = pathlib.Path("data")
